@@ -49,9 +49,11 @@ def apply_tripple_barrier(close: pd.Series, events: pd.DataFrame,
     
     for loc, t1 in events_['t1'].fillna(close.index[-1]).items():
         df0 = close[loc: t1]                                       # path prices
-        df0 = (df0 / close[loc] - 1) * events_.at[loc, 'side']     # path returns
-        out.loc[loc, 'sl'] = df0[df0 < sl[loc]].index.min()        # earlisest stop loss
-        out.loc[loc, 'pt'] = df0[df0 > pt[loc]].index.min()        # earlisest profit taking
+        first_val = close[loc]
+        sl_val = first_val + sl[loc]
+        pt_val = first_val + pt[loc]
+        out.loc[loc, 'sl'] = df0[df0 <= sl_val].index.min()        # earlisest stop loss
+        out.loc[loc, 'pt'] = df0[df0 >= pt_val].index.min()        # earlisest profit taking
     return out
 
 
