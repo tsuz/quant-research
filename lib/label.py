@@ -126,6 +126,8 @@ def get_bins(close: pd.Series, events: pd.DataFrame, t1: Union[pd.Series, bool] 
     px = close.reindex(px, method='bfill')
     out = pd.DataFrame(index=events_.index)
     out['ret'] = px.loc[events_['t1'].values].values / px.loc[events_.index] - 1
+    out['start_price'] = px.loc[events_.index]
+    out['touched_price'] = px.loc[events_['t1'].values].values
     if 'side' in events_:
         out['ret'] *= events_['side']
     out['bin'] = np.sign(out['ret'])
