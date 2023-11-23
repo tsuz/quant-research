@@ -2,7 +2,7 @@
 import pandas as pd
 
 
-def append_fvg(df: pd.DataFrame, fvg_min = 0: float):
+def append_fvg(df: pd.DataFrame, fvg_min: float = 0):
     '''
     Appends Fair Value Gap to an existing dataframe
     
