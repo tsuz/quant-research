@@ -21,7 +21,7 @@ def merge_timeframe(high_tf: pd.DataFrame, low_tf: pd.DataFrame, high_tf_time_de
     Merges high timeframe into low timeframe by index
     
         Parameters:
-            high_tf (pd.DataFrame): dataframe for higher timeframe
+            high_tf (pd.DataFrame): dataframe for higher timeframe. The developer needs to shift the dataframe before this function to prevent lookahead bias.
                                    - index: The timestamp sorted in ascending order
             low_tf (pd.DataFrame): dataframe for lower timeframe
                                    - index: The timestamp sorted in ascending order
@@ -34,9 +34,6 @@ def merge_timeframe(high_tf: pd.DataFrame, low_tf: pd.DataFrame, high_tf_time_de
 
     df1 = high_tf.copy(deep=True)
     df2 = low_tf.copy(deep=True)
-    
-    # high timeframe needs to shift one to prevent lookahead bias
-    df1 = df1.shift()
     
     df1['my_datetime'] = df1.index
     df2['my_datetime'] = df2.index

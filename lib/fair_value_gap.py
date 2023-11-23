@@ -13,7 +13,7 @@ def append_fvg(df: pd.DataFrame, fvg_min: float = 0):
             fvg_min (float): The minimum difference required to be considered a large enough fair value gap
         
         Returns:
-            df (pd.DataFrame): dataframe with the below colmns appended. The values are shifted by one to prevent lookahead bias
+            df (pd.DataFrame): dataframe with the below colmns appended. The values need to be shifted by one to prevent lookahead bias
                 - prev_fvg_bullish (boolean or NaN): Whether the previous FVG was bullish. False if bearish. NaN if no FVG has existed before.
                 - prev_fvg_high (number or NaN): The higher price of the most recent fair value gap
                 - prev_fvg_low (number or NaN): The lower price of the most recent fair value gap
@@ -39,10 +39,5 @@ def append_fvg(df: pd.DataFrame, fvg_min: float = 0):
     df[prev_fvg_high] = df[prev_fvg_high].fillna(method='ffill')
     df[prev_fvg_low] = df[prev_fvg_low].fillna(method='ffill')
     df[prev_fvg] = df[prev_fvg].fillna(method='ffill')
-
-    # prevent lookahead bias
-    df[prev_fvg_high] = df[prev_fvg_high].shift(1)
-    df[prev_fvg_low] = df[prev_fvg_low].shift(1)
-    df[prev_fvg] = df[prev_fvg].shift(1)
 
     return df
