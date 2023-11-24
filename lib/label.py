@@ -50,10 +50,15 @@ def apply_tripple_barrier(close: pd.Series, events: pd.DataFrame,
     for loc, t1 in events_['t1'].fillna(close.index[-1]).items():
         df0 = close[loc: t1]                                       # path prices
         first_val = close[loc]
-        sl_val = first_val + sl[loc]
-        pt_val = first_val + pt[loc]
-        out.loc[loc, 'sl'] = df0[df0 <= sl_val].index.min()        # earlisest stop loss
-        out.loc[loc, 'pt'] = df0[df0 >= pt_val].index.min()        # earlisest profit taking
+        sl_val = first_val + sl[loc] * events_.at[loc, 'side']
+        pt_val = first_val + pt[loc] * events_.at[loc, 'side']
+        if events_.at[loc, 'side'] is None or events_.at[loc, 'side'] == 1:
+            out.loc[loc, 'sl'] = df0[df0 <= sl_val].index.min()        # earlisest stop loss
+            out.loc[loc, 'pt'] = df0[df0 >= pt_val].index.min()        # earlisest profit taking
+        elif events_.at[loc, 'side'] == -1:
+            out.loc[loc, 'sl'] = df0[df0 >= sl_val].index.min()        # earlisest stop loss
+            out.loc[loc, 'pt'] = df0[df0 <= pt_val].index.min()        # earlisest profit taking
+
     return out
 
 
@@ -128,6 +133,8 @@ def get_bins(close: pd.Series, events: pd.DataFrame, t1: Union[pd.Series, bool] 
     out['ret'] = px.loc[events_['t1'].values].values / px.loc[events_.index] - 1
     out['start_price'] = px.loc[events_.index]
     out['touched_price'] = px.loc[events_['t1'].values].values
+    out['side'] = events_['side']
+
     if 'side' in events_:
         out['ret'] *= events_['side']
     out['bin'] = np.sign(out['ret'])
