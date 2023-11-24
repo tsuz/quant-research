@@ -3,12 +3,13 @@ import pandas as pd
 
 
 def format_df(df: pd.DataFrame, source: str):
-    if source == "forextester.com":
+    if source == "forextester":
         return format_df_forextester(df)
-
+    elif source == "dukascopy":
+        return format_df_dukascopy(df)
     
 def format_df_forextester(df: pd.DataFrame):
-    # forextester.com
+    # forextester
 
     # <TICKER>,<DTYYYYMMDD>,<TIME>,<OPEN>,<HIGH>,<LOW>,<CLOSE>,<VOL>
     df['date'] = df['<DTYYYYMMDD>'].astype("string")
@@ -34,3 +35,22 @@ def format_df_forextester(df: pd.DataFrame):
     
     return df
 
+
+def format_df_dukascopy(df: pd.DataFrame):
+    '''
+    Formats Dukascopy Forex data and drops unnecessary columns
+    
+        Parameters:
+            df (pd.DataFrame): dataframe from CSV file. The CSV looks like below:
+                # Gmt time,Open,High,Low,Close,Volume
+                # 18.11.2020 00:00:00.000,104.174,104.174,104.147,104.150,271.15
+        
+        Returns:
+            out (pd.DataFrame): dataframe with properly formatted datetime and OHLCV bar
+    '''
+    
+    df['datetime'] = pd.to_datetime(df['Gmt time'], format='%d.%m.%Y %H:%M:%S.%f', errors='coerce')
+    df = df.set_index('datetime')
+    df = df.drop(['Gmt time', 'date', 'time'], axis=1)
+
+    return df
