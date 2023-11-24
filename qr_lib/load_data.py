@@ -1,6 +1,6 @@
 import os
 import sys
-from lib.format import format_df
+from qr_lib.format import format_df
 import pandas as pd
 
 def load_data(symbol: str, start: str, end: str, source: str):
