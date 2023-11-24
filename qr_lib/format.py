@@ -51,6 +51,6 @@ def format_df_dukascopy(df: pd.DataFrame):
     
     df['datetime'] = pd.to_datetime(df['Gmt time'], format='%d.%m.%Y %H:%M:%S.%f', errors='coerce')
     df = df.set_index('datetime')
-    df = df.drop(['Gmt time', 'date', 'time'], axis=1)
+    df = df.drop(['Gmt time'], axis=1)
 
     return df
