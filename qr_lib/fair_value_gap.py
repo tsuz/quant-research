@@ -2,7 +2,7 @@
 import pandas as pd
 
 
-def append_fvg(df: pd.DataFrame, fvg_min: float = 0):
+def append_fvg(df: pd.DataFrame, fvg_min: float = 0, low_col: str = 'low', high_col: str = 'high'):
     '''
     Appends Fair Value Gap to an existing dataframe
     
@@ -23,17 +23,17 @@ def append_fvg(df: pd.DataFrame, fvg_min: float = 0):
     prev_fvg_high = 'prev_fvg_high'
     prev_fvg_low = 'prev_fvg_low'
     
-    bullish_fvg = (df['low'] > df['high'].shift(2) + fvg_min)
-    bearish_fvg = (df['high'] + fvg_min < df['low'].shift(2))
+    bullish_fvg = (df[low_col] > df[high_col].shift(2) + fvg_min)
+    bearish_fvg = (df[high_col] + fvg_min < df[low_col].shift(2))
 
     df.loc[bullish_fvg, prev_fvg] = True
     df.loc[bearish_fvg, prev_fvg] = False
 
-    df.loc[df[prev_fvg] == True, prev_fvg_high] = df['low']
-    df.loc[df[prev_fvg] == True, prev_fvg_low] = df['high'].shift(2)
+    df.loc[df[prev_fvg] == True, prev_fvg_high] = df[low_col]
+    df.loc[df[prev_fvg] == True, prev_fvg_low] = df[high_col].shift(2)
 
-    df.loc[df[prev_fvg] == False, prev_fvg_high] = df['low'].shift(2)
-    df.loc[df[prev_fvg] == False, prev_fvg_low] = df['high']
+    df.loc[df[prev_fvg] == False, prev_fvg_high] = df[low_col].shift(2)
+    df.loc[df[prev_fvg] == False, prev_fvg_low] = df[high_col]
 
     # fills NaN with previous values
     df[prev_fvg_high] = df[prev_fvg_high].fillna(method='ffill')
