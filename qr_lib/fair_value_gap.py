@@ -14,7 +14,8 @@ def append_fvg(df: pd.DataFrame, fvg_min: float = 0, low_col: str = 'low', high_
         
         Returns:
             df (pd.DataFrame): dataframe with the below colmns appended. The values need to be shifted by one to prevent lookahead bias
-                - prev_fvg_bullish (boolean or NaN): Whether the previous FVG was bullish. False if bearish. NaN if no FVG has existed before.
+                - fvg_occurred (boolean): Whether the current close of the candle stick forms a FVG.
+                - prev_fvg_bullish (boolean or NaN): Whether the most recent FVG was bullish. False if bearish. NaN if no FVG has existed before.
                 - prev_fvg_high (number or NaN): The higher price of the most recent fair value gap
                 - prev_fvg_low (number or NaN): The lower price of the most recent fair value gap
     '''
