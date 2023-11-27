@@ -1,6 +1,6 @@
 [project]
 name = "qr_lib"
-version = "0.0.5"
+version = "0.0.7"
 authors = []
 description = "Quant Research library"
 readme = "README.md"
