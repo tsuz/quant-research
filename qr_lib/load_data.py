@@ -3,7 +3,7 @@ import sys
 from qr_lib.format import format_df
 import pandas as pd
 
-def load_data(symbol: str, start: str, end: str, source: str):
+def load_data(symbol: str, start: str, end: str, source: str, path: str):
     '''
     Loads data from store
     
@@ -18,10 +18,11 @@ def load_data(symbol: str, start: str, end: str, source: str):
                 There may be additioanl attributes depending on the type of data.
     '''
 
-    path = os.path.dirname(sys.modules['__main__'].__file__)
+    if path is None:
+      path = os.path.dirname(sys.modules['__main__'].__file__)
 
-    cached_path = f'{path}/data/{source}_{symbol}_{start}_{end}_formatted.csv'
-    data_path = f'{path}/data/{source}_{symbol}.csv'
+    cached_path = f'{path}/{source}_{symbol}_{start}_{end}_formatted.csv'
+    data_path = f'{path}/{source}_{symbol}.csv'
 
     if os.path.exists(cached_path):
         df = pd.read_csv(cached_path)
