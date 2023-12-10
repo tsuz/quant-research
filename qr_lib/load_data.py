@@ -3,7 +3,7 @@ import sys
 from qr_lib.format import format_df
 import pandas as pd
 
-def load_data(symbol: str, start: str, end: str, source: str, path: str):
+def load_data(symbol: str, start: str, end: str, source: str, path: str, use_cache: bool = False):
     '''
     Loads data from store
     
@@ -24,7 +24,7 @@ def load_data(symbol: str, start: str, end: str, source: str, path: str):
     cached_path = f'{path}/{source}_{symbol}_{start}_{end}_formatted.csv'
     data_path = f'{path}/{source}_{symbol}.csv'
 
-    if os.path.exists(cached_path):
+    if use_cache and os.path.exists(cached_path):
         df = pd.read_csv(cached_path)
         df['datetime'] = pd.to_datetime(df['datetime'])
         df = df.set_index('datetime')
@@ -36,8 +36,9 @@ def load_data(symbol: str, start: str, end: str, source: str, path: str):
     # Filter timeframe
     df = df.loc[(df.index >= start) & (df.index <= end)]
     
-    # Save to cache
-    df.to_csv(cached_path)
+    if use_cache:
+        # Save to cache
+        df.to_csv(cached_path)
 
     return df
 
