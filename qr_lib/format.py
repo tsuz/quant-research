@@ -54,3 +54,24 @@ def format_df_dukascopy(df: pd.DataFrame):
     df = df.drop(['Gmt time'], axis=1)
 
     return df
+
+def format_df_oanda(df: pd.DataFrame):
+    '''
+    Formats Oanda Forex data and drops unnecessary columns
+
+        Parameters:
+            df (pd.DataFrame): dataframe from CSV file. The CSV looks like below:
+                # time,volume,complete,Open,High,Low,Close
+                # 2013-01-02 01:00:00+00:00,21,True,86.758,86.778,86.758,86.778
+
+        Returns:
+            out (pd.DataFrame): dataframe with properly formatted datetime and OHLCV bar
+    '''
+
+    df['datetime'] = pd.to_datetime(df['time'], errors='coerce')
+    df = df.set_index('datetime')
+    # remove localization so the downstream can process it
+    df.index.tz_localize(None)
+    df = df.drop(['time'], axis=1)
+
+    return df
