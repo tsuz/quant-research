@@ -7,7 +7,11 @@ def format_df(df: pd.DataFrame, source: str):
         return format_df_forextester(df)
     elif source == "dukascopy":
         return format_df_dukascopy(df)
-    
+    elif source == "oanda":
+        return format_df_oanda(df)
+    else:
+        raise Exception(f'Invalid source {source}')
+
 def format_df_forextester(df: pd.DataFrame):
     # forextester
 
