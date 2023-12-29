@@ -23,3 +23,9 @@ python3 -m build
 python3 -m pip install --upgrade twine
 python3 -m twine upload --repository testpypi dist/*
 ```
+
+
+1. Install the library from another project
+```sh
+pip install -i https://test.pypi.org/simple/ qr-lib==0.0.9
+```
